@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlgoSocial Analytics - Social Media Algorithm & Data Analysis Playground</title>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- External Library CDNs (Chart.js, jsPDF, Confetti) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/glassmorphism.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/modules.css">
+  <link rel="stylesheet" href="/css/visualizer.css">
+  <link rel="stylesheet" href="/css/chatbot.css">
+</head>
+<body>
+
+  <!-- JS Load Warning Banner -->
+  <div id="js-disabled-warning" style="background:#ef4444; color:white; padding:12px; text-align:center; font-size:13px; font-weight:bold; position:fixed; top:0; left:0; width:100%; z-index:99999; font-family:sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+    ⚠️ JavaScript is Blocked! If you double-clicked the index.html file, your browser blocks ES modules due to CORS policies. You must open this page via: http://localhost:3000
+  </div>
+
+  <div class="app-container">
+
+    <!-- 1. Collapsible Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="logo-section">
+          <div class="logo-icon"><i class="fas fa-project-diagram"></i></div>
+          <div class="logo-text">AlgoSocial</div>
+        </div>
+        
+        <ul class="navigation-links">
+          <li class="nav-item active" data-view="home">
+            <a href="#home"><i class="fas fa-house"></i> <span>Dashboard Home</span></a>
+          </li>
+          <li class="nav-item" data-view="visualizer">
+            <a href="#visualizer"><i class="fas fa-play-circle"></i> <span>Algorithm Visualizer</span></a>
+          </li>
+          <li class="nav-item" data-view="plagiarism">
+            <a href="#plagiarism"><i class="fas fa-copy"></i> <span>Plagiarism Checker</span></a>
+          </li>
+          <li class="nav-item" data-view="search">
+            <a href="#search"><i class="fas fa-search"></i> <span>Search Engine</span></a>
+          </li>
+          <li class="nav-item" data-view="sentiment">
+            <a href="#sentiment"><i class="fas fa-smile-beam"></i> <span>Sentiment Analyzer</span></a>
+          </li>
+          <li class="nav-item" data-view="analytics">
+            <a href="#analytics"><i class="fas fa-chart-bar"></i> <span>Engagement Analytics</span></a>
+          </li>
+          <li class="nav-item" data-view="edu-hub">
+            <a href="#edu-hub"><i class="fas fa-graduation-cap"></i> <span>Educational Hub</span></a>
+          </li>
+          <li class="nav-item" data-view="about">
+            <a href="#about"><i class="fas fa-info-circle"></i> <span>About Project</span></a>
+          </li>
+          <li class="nav-item" data-view="contact">
+            <a href="#contact"><i class="fas fa-envelope"></i> <span>Contact Us</span></a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- User Info Card in Sidebar -->
+      <div class="sidebar-footer">
+        <div class="user-profile-card glass-card" id="user-profile-trigger" style="padding: 10px; cursor: pointer;">
+          <div class="user-avatar" id="user-avatar-placeholder">👤</div>
+          <div class="user-info">
+            <span class="user-name" id="user-name-placeholder">Sign In</span>
+            <span class="user-college" id="user-college-placeholder">VTU Candidate</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 2. Main Content Viewport -->
+    <main class="main-viewport">
+      
+      <!-- Top Sticky Bar -->
+      <header class="view-header">
+        <div class="view-title-block">
+          <h1 id="viewport-title">AlgoSocial Dashboard</h1>
+          <p id="viewport-subtitle">Data analysis, string matchings, recursive and backtracking engines playground.</p>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center;">
+          <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme">
+            <i class="fas fa-moon" id="theme-toggle-icon"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- ==============================================
+           PAGE VIEWS (SPA Content Panels)
+           ============================================== -->
+
+      <!-- VIEW A: Home Dashboard -->
+      <div class="page-view active" id="view-home">
+        <!-- Stats counters row -->
+        <div class="stats-container">
+          <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-number" id="counter-users" data-target="8">0</div>
+            <div class="stat-label">Social Nodes (Users)</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fas fa-database"></i></div>
+            <div class="stat-number" id="counter-posts" data-target="6">0</div>
+            <div class="stat-label">Indexed Posts</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fas fa-hashtag"></i></div>
+            <div class="stat-number" id="counter-tags" data-target="15">0</div>
+            <div class="stat-label">Vocabulary Terms</div>
+          </div>
+          <div class="glass-card stat-card">
+            <div class="stat-icon"><i class="fas fa-heart"></i></div>
+            <div class="stat-number" id="counter-interactions" data-target="934">0</div>
+            <div class="stat-label">Total Interactions</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Left side: Educational Cards -->
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="glass-card">
+              <h2 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-bottom: 8px;">Algorithms in Social Media</h2>
+              <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6;">
+                Modern communication systems like Facebook, Twitter, and LinkedIn operate on complex algorithmic foundations. This playground illustrates key theories from the 4th Sem Engineering Design and Analysis of Algorithms (DAA) curriculum. Select a card below or use the sidebar to start experimenting!
+              </p>
+            </div>
+
+            <div class="module-cards-grid">
+              <!-- Card 1: Plagiarism Detector -->
+              <div class="glass-card glass-card-hoverable module-card" data-route="plagiarism" style="cursor: pointer;">
+                <div>
+                  <div class="module-card-header">
+                    <div class="module-card-icon"><i class="fas fa-copy" style="color: var(--primary);"></i></div>
+                    <span class="badge badge-primary">String Match</span>
+                  </div>
+                  <h3 class="module-card-title">Plagiarism Detection</h3>
+                  <p class="module-card-desc">Compare articles and check for overlapping segments using KMP, Rabin-Karp rolling hashes, and Dynamic Programming LCS.</p>
+                </div>
+                <div class="module-algo-tags">
+                  <span class="badge">O(N+M) KMP</span>
+                  <span class="badge">O(N×M) LCS</span>
+                </div>
+              </div>
+
+              <!-- Card 2: Search Autocomplete -->
+              <div class="glass-card glass-card-hoverable module-card" data-route="search" style="cursor: pointer;">
+                <div>
+                  <div class="module-card-header">
+                    <div class="module-card-icon"><i class="fas fa-search" style="color: var(--secondary);"></i></div>
+                    <span class="badge badge-primary">Data Structures</span>
+                  </div>
+                  <h3 class="module-card-title">Search Autocomplete</h3>
+                  <p class="module-card-desc">Search posts instantly and see predictive autocompletes using a prefix-matching Trie data structure in memory.</p>
+                </div>
+                <div class="module-algo-tags">
+                  <span class="badge">O(L) Lookups</span>
+                  <span class="badge">Trie Trees</span>
+                </div>
+              </div>
+
+              <!-- Card 3: Sentiment NLP -->
+              <div class="glass-card glass-card-hoverable module-card" data-route="sentiment" style="cursor: pointer;">
+                <div>
+                  <div class="module-card-header">
+                    <div class="module-card-icon"><i class="fas fa-smile-beam" style="color: var(--accent);"></i></div>
+                    <span class="badge badge-primary">Data Analysis</span>
+                  </div>
+                  <h3 class="module-card-title">Sentiment Analyzer</h3>
+                  <p class="module-card-desc">Parse text comments to gauge positive and negative sentiments with rule-based lexicon parsing and word frequency maps.</p>
+                </div>
+                <div class="module-algo-tags">
+                  <span class="badge">NLP</span>
+                  <span class="badge">Lexicons</span>
+                </div>
+              </div>
+
+              <!-- Card 4: Graph Visualizer -->
+              <div class="glass-card glass-card-hoverable module-card" data-route="visualizer" style="cursor: pointer;">
+                <div>
+                  <div class="module-card-header">
+                    <div class="module-card-icon"><i class="fas fa-play-circle" style="color: var(--success);"></i></div>
+                    <span class="badge badge-primary">Backtracking</span>
+                  </div>
+                  <h3 class="module-card-title">Algorithm Playground</h3>
+                  <p class="module-card-desc">Animate backtracking paths through friendship graphs and watch recursive comment trees update the call stack live.</p>
+                </div>
+                <div class="module-algo-tags">
+                  <span class="badge">DFS DFS</span>
+                  <span class="badge">Backtrack</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Trending widget -->
+          <div class="glass-card" style="display: flex; flex-direction: column; justify-content: flex-start;">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">Trending Hashtags (Trie)</h3>
+            <div class="trending-list" id="trending-hashtags-dashboard">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW B: Algorithm Visualizer -->
+      <div class="page-view" id="view-visualizer">
+        <div class="glass-card">
+          <div class="plag-results-header" style="margin-bottom: 20px;">
+            <div style="display: flex; flex-direction: column;">
+              <h2 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800;">Visual Playgrounds</h2>
+              <p style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Choose an algorithm module to watch dynamic graph search execution step-by-step.</p>
+            </div>
+            <div class="controls-group">
+              <button class="glass-btn glass-btn-primary" id="btn-show-backtracking">Backtracking (Pathfinder)</button>
+              <button class="glass-btn" id="btn-show-recursion">Recursion (Comment Tree)</button>
+              <button class="glass-btn" id="btn-show-string-trace">String Matching (KMP Grid)</button>
+            </div>
+          </div>
+
+          <div class="visualizer-workspace">
+            <!-- Left workspace: Visual simulation area -->
+            <div class="visualizer-main-box">
+              
+              <!-- Segment 1: Backtracking Canvas -->
+              <div id="visualizer-backtracking-box">
+                <div class="canvas-container">
+                  <canvas id="backtracking-canvas"></canvas>
+                </div>
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                  <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--text-muted);">
+                    <label for="select-path-start">Start:</label>
+                    <select class="glass-select" id="select-path-start" style="width: 80px; padding: 6px;"></select>
+                    <label for="select-path-target" style="margin-left: 8px;">Target:</label>
+                    <select class="glass-select" id="select-path-target" style="width: 80px; padding: 6px;"></select>
+                  </div>
+                  <div style="display: flex; gap: 6px; font-size: 11px;">
+                    <span class="badge" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b;">Exploring</span>
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Active Stack</span>
+                    <span class="badge" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">Backtracked</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Segment 2: Recursion Comment DOM Tree -->
+              <div id="visualizer-recursion-box" style="display: none;">
+                <div class="comment-tree-container" id="recursion-comment-tree-container">
+                  <!-- Rendered recursively by JS -->
+                </div>
+              </div>
+
+              <!-- Segment 3: String Grid Tracer -->
+              <div id="visualizer-strings-box" style="display: none;">
+                <div class="char-matching-playground" style="margin-bottom: 12px;">
+                  <div style="font-size: 11px; color: var(--text-muted); font-weight: bold; margin-bottom: 4px;">Text Grid:</div>
+                  <div id="string-trace-text-grid"></div>
+                  <div style="font-size: 11px; color: var(--text-muted); font-weight: bold; margin-top: 10px; margin-bottom: 4px;">Pattern Matcher Grid:</div>
+                  <div id="string-trace-pattern-grid"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <label style="font-size: 12px; color: var(--text-muted);">Method:</label>
+                    <select class="glass-select" id="string-tracer-algo-select" style="width: 110px; padding: 6px;">
+                      <option value="KMP">KMP Search</option>
+                      <option value="Rabin-Karp">Rabin-Karp</option>
+                    </select>
+                  </div>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" class="glass-input" id="string-tracer-pattern-input" value="KMP matching" style="width: 150px; padding: 6px;" placeholder="Search pattern...">
+                    <button class="glass-btn glass-btn-primary" id="btn-string-tracer-submit" style="padding: 6px 12px;">Reset</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="visualizer-progress-bar-container" style="width: 100%; height: 6px; background: var(--glass-border); border-radius: 3px; overflow: hidden; margin-bottom: 12px; margin-top: 6px;">
+                <div id="visualizer-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.25s ease;"></div>
+              </div>
+
+              <!-- Controls bar -->
+              <div class="visualizer-controls">
+                <div class="controls-group">
+                  <button class="glass-btn" id="btn-vis-prev" title="Step Backward"><i class="fas fa-step-backward"></i></button>
+                  <button class="glass-btn glass-btn-primary" id="btn-vis-play" title="Auto Play"><i class="fas fa-play"></i></button>
+                  <button class="glass-btn" id="btn-vis-next" title="Step Forward"><i class="fas fa-step-forward"></i></button>
+                  <button class="glass-btn" id="btn-vis-reset" title="Reset Simulation"><i class="fas fa-redo"></i></button>
+                </div>
+                <div class="speed-control-slider">
+                  <span>Speed:</span>
+                  <input type="range" class="speed-slider" id="vis-speed-slider" min="200" max="2500" value="1000" step="100">
+                  <span id="speed-val-label">1.0s</span>
+                </div>
+              </div>
+
+              <!-- Terminal console output -->
+              <div class="console-box" id="visualizer-console">
+                [Step 0/0] Console loaded. Choose an algorithm sequence to watch trace steps.
+              </div>
+            </div>
+
+            <!-- Right Sidebar: Explanation, Stack & Complexity parameters -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <!-- Variable call stack (Shows recursion stack frames) -->
+              <div class="glass-card" style="padding: 16px;">
+                <div class="stack-panel-title" id="visualizer-stack-title">Search Status</div>
+                <div class="stack-frames-list" id="visualizer-stack-list">
+                  <!-- Dynamic Stack Frames -->
+                </div>
+              </div>
+
+              <!-- Complexity statistics parameters -->
+              <div class="glass-card" style="padding: 16px;">
+                <h3 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px; margin-bottom: 10px; text-transform: uppercase;">Complexity Matrix</h3>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;" id="vis-complexity-matrix">
+                  <!-- Filled dynamically by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW C: Plagiarism Detector -->
+      <div class="page-view" id="view-plagiarism">
+        <div class="glass-card">
+          <h2 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; margin-bottom: 16px;">Social Post Plagiarism Checker</h2>
+          <div class="grid-2">
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Post A (Original Article)</label>
+              <textarea class="glass-input" id="plag-text-a" style="height: 140px; resize: none; line-height: 1.5;" placeholder="Enter first text block..."></textarea>
+            </div>
+            <div>
+              <label style="display: block; font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Post B (Comparison Target)</label>
+              <textarea class="glass-input" id="plag-text-b" style="height: 140px; resize: none; line-height: 1.5;" placeholder="Enter text block to test similarity..."></textarea>
+            </div>
+          </div>
+          <div style="margin-top: 16px; display: flex; gap: 12px; justify-content: flex-end;">
+            <button class="glass-btn" id="btn-plag-load-sample">Load Sample Post</button>
+            <button class="glass-btn glass-btn-primary" id="btn-plag-run">Run LCS Analysis</button>
+          </div>
+        </div>
+
+        <div class="glass-card" id="plagiarism-results-section" style="display: none;">
+          <div class="plag-results-header">
+            <div class="score-circle-wrapper">
+              <div class="score-circle" id="plag-percentage-circle">0%</div>
+              <div style="display: flex; flex-direction: column;">
+                <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800;">LCS Similarity Result</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin-top: 2px;" id="plag-summary-text">Calculating LCS word indexes...</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <span class="badge badge-danger" id="plag-status-badge">Uniqueness Low</span>
+              <span class="badge" style="background: rgba(255, 255, 255, 0.05);" id="plag-words-badge">Matches: 0 words</span>
+            </div>
+          </div>
+
+          <div class="comparison-layout">
+            <div>
+              <h4 style="font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px;">HIGHLIGHTED DUPLICATES IN POST A:</h4>
+              <div class="text-compare-box" id="plag-box-highlight-a"></div>
+            </div>
+            <div>
+              <h4 style="font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px;">HIGHLIGHTED DUPLICATES IN POST B:</h4>
+              <div class="text-compare-box" id="plag-box-highlight-b"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW D: Search Engine Demo -->
+      <div class="page-view" id="view-search">
+        <div class="glass-card">
+          <h2 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; margin-bottom: 12px;">Predictive Trie Search Engine</h2>
+          <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 20px; line-height: 1.5;">
+            Simulating standard social search indexing. As you type, the query is parsed letter-by-letter to retrieve prefix-matched terms recursively from a **Trie** structure stored in memory.
+          </p>
+
+          <div class="search-wrapper">
+            <i class="fas fa-search search-icon-inside"></i>
+            <input type="text" class="glass-input search-input-padding" id="search-input-field" placeholder="Search hashtags, topics, or username tags (e.g. #DAA, chethan)..." autocomplete="off">
+            
+            <!-- Autocomplete suggestions dropdown -->
+            <div class="autocomplete-suggestions-box" id="search-autocomplete-box">
+              <!-- Suggestions injected by JS -->
+            </div>
+          </div>
+
+          <div style="margin-top: 20px;">
+            <h4 style="font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px;">SEARCH ENGINE HISTORY:</h4>
+            <div class="search-history-container" id="search-history-list">
+              <!-- Tags injected by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Search Results list -->
+        <div class="glass-card" id="search-results-section">
+          <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 16px;" id="search-results-title">Posts Feed</h3>
+          <div style="display: flex; flex-direction: column; gap: 16px;" id="search-results-feed">
+            <!-- Injected by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW E: Sentiment Analyzer -->
+      <div class="page-view" id="view-sentiment">
+        <div class="glass-card">
+          <h2 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800; margin-bottom: 12px;">NLP Sentiment & Opinion Classifier</h2>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 20px;">
+            This module evaluates text sentiment using a rule-based tokenizer and an **AFINN-style lexicon dictionary**. It scans for modifiers (intensifiers like "very" or negations like "not") to weight final scoring.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <textarea class="glass-input" id="sentiment-input-text" style="height: 100px; resize: none; line-height: 1.5;" placeholder="Enter some social feedback (e.g. 'This new algorithm is very amazing but the visualizer runs not so fast')..."></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div style="display: flex; gap: 8px;">
+                <button class="glass-btn" id="btn-sentiment-sample-pos">Load Pos Comment</button>
+                <button class="glass-btn" id="btn-sentiment-sample-neg">Load Neg Comment</button>
+              </div>
+              <button class="glass-btn glass-btn-primary" id="btn-sentiment-analyze">Analyze sentiment</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sentiment details display panels -->
+        <div class="sentiment-details-grid" id="sentiment-results-layout" style="display: none;">
+          <!-- Left side: NLP breakdown tokens -->
+          <div class="glass-card">
+            <div class="plag-results-header" style="margin-bottom: 16px;">
+              <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800;">Lexical Breakdown</h3>
+              <span class="badge" id="sentiment-final-badge">Positive</span>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <span style="font-size: 12px; color: var(--text-muted);">Accumulated Polar Score:</span>
+                <span style="font-size: 14px; font-weight: bold; margin-left: 8px;" id="sentiment-score-number">0.0</span>
+              </div>
+              <div>
+                <span style="font-size: 12px; color: var(--text-muted);">Comparative Sentiment Score:</span>
+                <span style="font-size: 14px; font-weight: bold; margin-left: 8px;" id="sentiment-comparative-number">0.0</span>
+              </div>
+              
+              <h4 style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-top: 12px; text-transform: uppercase;">Identified Sentiment Tokens:</h4>
+              <div class="sentiment-breakdown-tokens" id="sentiment-tokens-container">
+                <!-- Badges -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Word Cloud canvas/display -->
+          <div class="glass-card">
+            <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 16px;">Word Cloud Frequencies</h3>
+            <div class="word-cloud-container" id="sentiment-wordcloud-box">
+              <!-- Word tokens sized by weight -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW F: Analytics Dashboard -->
+      <div class="page-view" id="view-analytics">
+        <div class="plag-results-header">
+          <div style="display: flex; flex-direction: column;">
+            <h2 style="font-family: var(--font-heading); font-size: 18px; font-weight: 800;">Analytics Dashboard</h2>
+            <p style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">Monitor platform traffic, user trends, engagement indices, and spam detection logs.</p>
+          </div>
+          <button class="glass-btn glass-btn-primary" id="btn-export-pdf-report"><i class="fas fa-file-pdf"></i> Download PDF Report</button>
+        </div>
+
+        <div class="grid-2">
+          <!-- Engagement Line Chart -->
+          <div class="glass-card" style="height: 350px; display: flex; flex-direction: column;">
+            <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 12px;">Weekly Platform Interaction Rates</h3>
+            <div style="flex-grow: 1; position: relative;">
+              <canvas id="engagement-line-chart"></canvas>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="grid-2" style="gap: 20px;">
+              <!-- Sentiment Doughnut Chart -->
+              <div class="glass-card" style="height: 220px; display: flex; flex-direction: column; padding: 16px;">
+                <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; margin-bottom: 8px;">Sentiment Ratio</h4>
+                <div style="flex-grow: 1; position: relative;">
+                  <canvas id="sentiment-doughnut-chart"></canvas>
+                </div>
+              </div>
+              
+              <!-- Spam Comments Gauge Chart -->
+              <div class="glass-card" style="height: 220px; display: flex; flex-direction: column; padding: 16px; align-items: center; justify-content: space-between;">
+                <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; margin-bottom: 8px; width: 100%;">Fake/Spam Comment Scanner</h4>
+                <div style="flex-grow: 1; position: relative; width: 100%; height: 100px;">
+                  <canvas id="spam-gauge-chart"></canvas>
+                </div>
+                <div style="text-align: center; margin-top: 6px;">
+                  <div style="font-size: 14px; font-weight: bold; color: var(--warning);" id="spam-index-label">15%</div>
+                  <div style="font-size: 10px; color: var(--text-muted);">Flagged Comments Ratio</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive spam check sandbox -->
+            <div class="glass-card" style="padding: 16px;">
+              <h4 style="font-family: var(--font-heading); font-size: 13px; font-weight: 700; margin-bottom: 8px;">Real-Time Spam Detector Sandbox</h4>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="text" class="glass-input" id="spam-detector-sandbox-input" placeholder="Type a comment to scan (e.g. 'VISIT FREE MONEY NOW!!')..." style="padding: 8px 12px; font-size: 12px;">
+                <button class="glass-btn glass-btn-primary" id="btn-spam-detector-scan" style="padding: 8px 16px; font-size: 12px;">Scan</button>
+              </div>
+              <div id="spam-detector-sandbox-result" style="margin-top: 10px; font-size: 11px; display: none;">
+                <!-- Output indicators -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW G: Educational Hub -->
+      <div class="page-view" id="view-edu-hub">
+        <div class="glass-card">
+          <h2 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-bottom: 12px;">Educational Hub: DAA Algorithm Matrix</h2>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 24px;">
+            A resource index detailing structural, search, and dynamic programming algorithms matching the VTU Karnataka 4th Semester syllabus guidelines.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 24px;" id="edu-hub-content-list">
+            <!-- Programmatic injector of detailed educational texts -->
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW H: About Project -->
+      <div class="page-view" id="view-about">
+        <div class="glass-card">
+          <h2 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-bottom: 12px;">VTU Engineering Mini-Project Portfolio</h2>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6; margin-bottom: 24px;">
+            This mini-project, titled <strong>"AlgoSocial Analytics"</strong>, satisfies the course requirements for the <strong>Design & Analysis of Algorithms (DAA)</strong> laboratory and academic review specifications for VTU Karnataka engineering candidates.
+          </p>
+
+          <div class="grid-2">
+            <div>
+              <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 10px;">Core Module Implementation</h3>
+              <ul style="padding-left: 20px; font-size: 13px; line-height: 1.8; color: var(--text-muted);">
+                <li><strong>String Search</strong>: KMP character-matching grid + Rabin-Karp rolling hashes.</li>
+                <li><strong>Dynamic Programming</strong>: Word-level LCS highlighting plagiarism overlaps.</li>
+                <li><strong>Data Structures</strong>: Memory-based Trie class handling prefix-matched autocomplete lists.</li>
+                <li><strong>Backtracking Recursion</strong>: Dynamic graph traversal illustrating active recursion frames and pops.</li>
+                <li><strong>Sentiment Analysis</strong>: Lexicon score tokens evaluating positive and negative text polarity.</li>
+              </ul>
+            </div>
+            <div>
+              <h3 style="font-family: var(--font-heading); font-size: 15px; font-weight: 700; margin-bottom: 10px;">VTU Project Evaluation Metrics</h3>
+              <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 6px;">
+                  <span style="color: var(--text-muted);">University:</span>
+                  <span style="font-weight: 600;">VTU Belagavi, Karnataka</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 6px;">
+                  <span style="color: var(--text-muted);">Subject Code:</span>
+                  <span style="font-weight: 600;">BCS401 (or equivalent DAA course)</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--glass-border); padding-bottom: 6px;">
+                  <span style="color: var(--text-muted);">Semester:</span>
+                  <span style="font-weight: 600;">4th Semester B.E / B.Tech</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 6px;">
+                  <span style="color: var(--text-muted);">Mini-Project Classification:</span>
+                  <span style="font-weight: 600;">DAA / Data Science Lab Mini Project</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project Architectural flow diagram -->
+        <div class="glass-card">
+          <h3 style="font-family: var(--font-heading); font-size: 16px; font-weight: 800; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 16px;">System Architecture Flowchart</h3>
+          <div style="display: flex; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.15); border-radius: 12px; border: 1px solid var(--glass-border); overflow-x: auto;">
+            <!-- Render a beautiful text-based block diagram matching GFM flow -->
+            <pre style="font-family: 'Courier New', monospace; font-size: 12px; color: var(--text-muted); line-height: 1.4; text-align: left; padding: 10px;">
+┌───────────────────────────────────────────────────────────────┐
+│                     USER INTERFACE (UI)                       │
+│    Vanilla HTML5 / Glassmorphic CSS Dashboard Panels         │
+└───────┬──────────────────────┬──────────────────────┬─────────┘
+        │                      │                      │
+        ▼                      ▼                      ▼
+┌───────────────┐      ┌───────────────┐      ┌───────────────┐
+│ Plagiarism UI │      │ Visualizer UI │      │ Trie Search   │
+└───────┬───────┘      └───────┬───────┘      └───────┬───────┘
+        │                      │                      │
+        ▼                      ▼                      ▼
+┌───────────────┐      ┌───────────────┐      ┌───────────────┐
+│  LCS Engine   │      │ Backtracking  │      │ Trie Class    │
+│  KMP / Rabin  │      │ DFS Recursion │      │ Prefix Index  │
+└───────────────┘      └───────────────┘      └───────────────┘
+        │                      │                      │
+        └──────────────────────┼──────────────────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  MOCK DATA STORE    │
+                    │   (js/data.js)      │
+                    └─────────────────────┘
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW I: Contact Page -->
+      <div class="page-view" id="view-contact">
+        <div class="glass-card" style="max-width: 600px; margin: 0 auto; width: 100%;">
+          <h2 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800; margin-bottom: 12px; text-align: center;">Mini Project Development Team</h2>
+          <p style="color: var(--text-muted); font-size: 13px; line-height: 1.5; margin-bottom: 24px; text-align: center;">
+            Contact the developers or leave feedback regarding algorithmic visualizations.
+          </p>
+
+          <form id="contact-feedback-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="grid-2" style="gap: 16px;">
+              <div>
+                <label style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Student Name</label>
+                <input type="text" class="glass-input" id="contact-name-input" required placeholder="e.g. Varun">
+              </div>
+              <div>
+                <label style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">University USN</label>
+                <input type="text" class="glass-input" id="contact-usn-input" required placeholder="e.g. 1RV24CS001">
+              </div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Email Address</label>
+              <input type="email" class="glass-input" id="contact-email-input" required placeholder="name@college.edu">
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">Review / Comments</label>
+              <textarea class="glass-input" id="contact-comments-input" style="height: 100px; resize: none; line-height: 1.5;" placeholder="Enter project review remarks..."></textarea>
+            </div>
+            <button type="submit" class="glass-btn glass-btn-primary" style="margin-top: 10px;">Submit Feedback</button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 3. Dynamic Tutor Chatbot Assistant Widget -->
+    <div class="chatbot-widget">
+      <!-- Toggle button -->
+      <button class="chatbot-toggle-btn" id="chatbot-toggle-trigger">
+        <i class="fas fa-comment-medical"></i>
+        <div class="chatbot-notification-dot"></div>
+      </button>
+
+      <!-- Chat window panel -->
+      <div class="chatbot-window" id="chatbot-window-box">
+        <div class="chatbot-header">
+          <div class="chatbot-header-info">
+            <span class="chatbot-header-avatar">🤖</span>
+            <div>
+              <div class="chatbot-header-title">AlgoSocial Tutor</div>
+              <div class="chatbot-header-status"><span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; display: inline-block;"></span>Online</div>
+            </div>
+          </div>
+          <button class="chatbot-close-btn" id="chatbot-close-trigger"><i class="fas fa-times"></i></button>
+        </div>
+
+        <div class="chatbot-messages" id="chatbot-message-list">
+          <!-- Text bubbles -->
+        </div>
+
+        <div class="chatbot-chips-container" id="chatbot-suggest-chips">
+          <div class="chatbot-chip" data-query="kmp">Explain KMP</div>
+          <div class="chatbot-chip" data-query="backtracking">Why Backtrack?</div>
+          <div class="chatbot-chip" data-query="project">VTU Project Details</div>
+        </div>
+
+        <div class="chatbot-input-area">
+          <input type="text" id="chatbot-text-input" placeholder="Ask about algorithms (e.g. Rabin-Karp)...">
+          <button class="chatbot-send-btn" id="chatbot-send-trigger"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Interactive Student Authentication Modal -->
+    <div class="modal-overlay" id="auth-modal-overlay">
+      <div class="glass-card modal-content">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <div class="logo-icon" style="margin: 0 auto 12px; width: 44px; height: 44px;"><i class="fas fa-graduation-cap"></i></div>
+          <h2 style="font-family: var(--font-heading); font-size: 20px; font-weight: 800;">Student Sign In</h2>
+          <p style="color: var(--text-muted); font-size: 11px; margin-top: 4px;">Sign in to customize the DAA Mini Project report.</p>
+        </div>
+
+        <form id="auth-login-form">
+          <div class="auth-form-group">
+            <label for="auth-student-name">Student Name</label>
+            <input type="text" class="glass-input" id="auth-student-name" required value="Varun Gowda">
+          </div>
+          <div class="auth-form-group">
+            <label for="auth-student-usn">USN Identifier</label>
+            <input type="text" class="glass-input" id="auth-student-usn" required value="1RV24CS099" placeholder="e.g. 1RV24CS099">
+          </div>
+          <div class="auth-form-group">
+            <label for="auth-student-college">College / Institution</label>
+            <input type="text" class="glass-input" id="auth-student-college" required value="RV College of Engineering">
+          </div>
+          <button type="submit" class="glass-btn glass-btn-primary" style="width: 100%; margin-top: 10px;">Enter Dashboard</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Vite module scripts insertion -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
